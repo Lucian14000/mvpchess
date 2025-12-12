@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+  <title>抽象策略棋 — Web 版</title>
+  <style>
+    html,body { height:100%; margin:0; background:#222; display:flex; align-items:center; justify-content:center; }
+    #container { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+    canvas { background:transparent; display:block; }
+    /* optional: center page content */
+  </style>
+</head>
+<body>
+  <div id="container">
+    <canvas id="gameCanvas"></canvas>
+  </div>
+
+  <!-- 依赖顺序：board -> ai -> renderer -> main -->
+  <script src="js/board.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
