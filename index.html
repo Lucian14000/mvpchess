@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>抽象策略棋 · 版本集合</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+<style>
+html,body{
+  margin:0;
+  height:100%;
+  background:#222;
+  color:#eee;
+  font-family:sans-serif;
+}
+
+#topbar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px;
+  background:#111;
+  border-bottom:1px solid #444;
+}
+
+#topbar button{
+  padding:6px 12px;
+  font-size:14px;
+  cursor:pointer;
+  background:#333;
+  color:#eee;
+  border:1px solid #555;
+  border-radius:4px;
+}
+
+#topbar button:hover{
+  background:#444;
+}
+
+#frame{
+  width:100%;
+  height:calc(100% - 52px);
+  border:none;
+  background:#000;
+}
+
+/* ===== 帮助遮罩 ===== */
+
+#helpOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  z-index:1000;
+}
+
+#helpBox{
+  max-width:720px;
+  max-height:90vh;
+  margin:5vh auto;
+  padding:20px;
+  background:#1a1a1a;
+  border:1px solid #555;
+  border-radius:8px;
+  overflow-y:auto;
+  line-height:1.5;
+  font-size:14px;
+}
+
+#helpBox h2{
+  margin-top:0;
+}
+
+#closeHelp{
+  position:sticky;
+  top:0;
+  float:right;
+  margin:-10px -10px 10px 0;
+  padding:4px 10px;
+  background:#333;
+  border:1px solid #555;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div id="topbar">
+  <strong>抽象策略棋</strong>
+
+  <button onclick="loadVersion('v1_0_0')">1.0.0</button>
+  <button onclick="loadVersion('v1_0_1')">1.0.1</button>
+  <button onclick="loadVersion('v1_0_2')">1.0.2</button>
+  <button onclick="loadVersion('v1_0_3')">1.0.3</button>
+
+  <button onclick="showHelp()">规则 / 版本说明</button>
+</div>
+
+<iframe id="frame"></iframe>
+
+<!-- ===== 帮助面板 ===== -->
+<div id="helpOverlay">
+  <div id="helpBox">
+    <button id="closeHelp" onclick="hideHelp()">关闭</button>
+
+    <h2>基础规则说明</h2>
+
+    <p>
+      <b>A / B 计分规则</b><br/>
+      每当在棋盘上落下一枚棋子时，系统会检查该棋子周围
+      <b>8 个方向</b>的相邻格子（上下左右 + 四个对角）。
+    </p>
+
+    <ul>
+      <li>相邻格子中存在 <b>己方棋子</b>：计入 A 分</li>
+      <li>相邻格子中存在 <b>对方棋子</b>：计入 B 分</li>
+      <li>每一个相邻格子独立计算一次</li>
+    </ul>
+
+    <p>
+      对局结束后，玩家的最终得分为：<br/>
+      <b>总分 = A × B</b>
+    </p>
+
+    <h2>版本说明</h2>
+
+    <p><b>1.0.0｜基础版本</b><br/>
+    最初的标准规则版本，单棋盘，基础 A / B 评分。</p>
+
+    <p><b>1.0.1｜AI 与交互改进</b><br/>
+    加入 AI 类型选择（Greedy / Lookahead）与 AI 提示功能，控制按钮统一为浮窗，优化玩家操作体验。</p>
+
+    <p><b>1.0.2｜AI 强化版本</b><br/>
+    优化 AI 决策逻辑，修复快速点击导致 AI 错误落子的 bug，提升对局稳定性，规则保持不变。</p>
+
+    <p><b>1.0.3｜评分系统进化</b><br/>
+    在单棋盘前提下扩展评分维度和棋子权重概念，引入 <b>z 值</b>：
+    <ul>
+      <li>每颗棋子都有一个初始权重 z=1.0</li>
+      <li>形成组合（如三连或 2x2 方阵）时，相关棋子的 z 会累积提升</li>
+      <li>z 值影响邻域计分，进而间接影响 A / B 增量</li>
+      <li>棋盘上不同 z 值的格子会有颜色高亮显示，帮助玩家判断潜在组合</li>
+    </ul>
+    这一版本使得评分不再单纯依赖落子邻居数量，而是综合考虑棋子权重和组合加成，为策略深度提供了更多维度。
+    </p>
+  </div>
+</div>
+
+
+<script>
+function loadVersion(v){
+  document.getElementById('frame').src =
+    `version/${v}/index.html`;
+}
+
+function showHelp(){
+  document.getElementById('helpOverlay').style.display='block';
+}
+
+function hideHelp(){
+  document.getElementById('helpOverlay').style.display='none';
+}
+
+// 默认版本
+loadVersion('v1_0_2');
+</script>
+
+</body>
+</html>
